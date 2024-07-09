@@ -3,7 +3,7 @@
 $fn = 50;
 
 totalHeight = 30;
-// A radius divisible by 3.14 gives us a whole number of teeth 2mm apart on the circumference
+// Scaling down the radius by 3.14 gives us a whole number of teeth 2mm apart on the circumference
 gearRadius = 300 / 3.14;
 gearHeight = 9.5;
 timingBeltToothSpacing = 2;
@@ -16,16 +16,20 @@ pipeRadius = 21.5;
 pipeTrackWidth = 2;
 pipeTrackDepth = 5;
 
+// Gear to mesh with GT2 timing belt sized adapter on motor
+module gt2Gear(radius) {
+    cylinder(h = gearHeight, r = radius);
+    for (i = [0:360 / (2 * 3.14 * radius / timingBeltToothSpacing) : 360]) {
+        rotate([0, 0, i])
+        translate([0.997 * radius, 0, 0])
+        scale([1.6, 0.8, 1])
+        cylinder(r = 2 / 3, h = gearHeight);
+    }
+}
+
 difference() {
     union() {
-        // Gear to mesh with GT2 timing belt sized adapter on motor
-        cylinder(h = gearHeight, r = gearRadius);
-        for (i = [0:360 / (2 * 3.14 * gearRadius / timingBeltToothSpacing) : 360]) {
-            rotate([0, 0, i])
-            translate([0.997 * gearRadius, 0, 0])
-            scale([1.6, 0.8, 1])
-            cylinder(r = 2 / 3, h = gearHeight);
-        }
+        gt2Gear(gearRadius);
         cylinder(h = totalHeight, r = prismDistance, $fn = 3); // triangular prism
     }
     // Hole for mounting screws
