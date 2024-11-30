@@ -8,7 +8,7 @@ bearingWidth = 10;
 bearingRadius = 11.25;
 mountLength = 80;
 gearCenterOff = 42;
-gearRadius = (gearCenterOff - 2) * 3 / 3.14; // guarantees an integer number of teeth on the circumference
+gearRadius = (gearCenterOff - 4) * 3 / 3.14; // guarantees an integer number of teeth on the circumference
 mountHeight = 80;
 motorMountSpacing = 46.5;
 motorShaft = 25;
@@ -22,6 +22,7 @@ addedBaseThickness = 10;
 screwDivotRadius = 8;
 motorFaceToGear = 15;
 reelRadius = 6 * bearingInternalRadius;
+woodRodRadius = 11;
 
 module reelBase() {
     difference() {
@@ -68,17 +69,20 @@ module reelBase() {
 }
 
 module reelGear() {
-    // Bearing insert
-    translate([-gearCenterOff, 0, 0])
-    rotate([90, 0, 0])
-    cylinder(r = bearingInternalRadius, h = 2 * bearingWidth, center = true);
-    
-    // Gear
-    translate([-gearCenterOff, motorFaceToGear + gearHeight - bearingWidth / 2, 0])
-    rotate([90, 0, 0])
-    gt2Gear(gearRadius);
+    difference() {
+        // Gear
+        translate([-gearCenterOff, motorFaceToGear + gearHeight -       bearingWidth / 2, 0])
+        rotate([90, 0, 0])
+        gt2Gear(gearRadius);
+        
+        // Wooden rod insert
+        translate([-gearCenterOff, 0, 0])
+        rotate([90, 0, 0])
+        cylinder(r = woodRodRadius, h = 3 * bearingWidth, center = true);
+    }
 }
 
+// Unused; decided to use a wooden rod instead
 module reelShaft() {
     difference() {
         union() {
@@ -104,4 +108,4 @@ module reelShaft() {
 
 reelBase();
 %reelGear();
-reelShaft();
+//reelShaft();
